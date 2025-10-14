@@ -1,0 +1,24 @@
+{
+  "name": "learning-express-js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "type":"module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Manukagallage7/Learning-Express-Js.git"
+  },
+  "keywords": [],
+  "author": "Manuka Gallage",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Manukagallage7/Learning-Express-Js/issues"
+  },
+  "homepage": "https://github.com/Manukagallage7/Learning-Express-Js#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
