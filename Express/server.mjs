@@ -1,19 +1,11 @@
 import express from 'express';
+import productRouter from './src/router/product.mjs';
+import userRouter from './src/router/user.mjs';
 
 const server = express();
 
-server.get('/', (req, res) => {
-    console.log(req)
-    res.json({
-        msg: 'Hello World'
-    }); // Send a response to the client using
-})
-
-server.get('/api/v1/users', (req, res) => {
-    res.status(200).json({
-        msg: 'User list'
-    })
-})
+server.use(userRouter)
+server.use(productRouter)
 
 server.listen(5000, ()=> {
     console.log('Server is running on http://localhost:5000');
