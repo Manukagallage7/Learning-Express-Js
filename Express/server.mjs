@@ -4,7 +4,15 @@ const server = express();
 
 server.get('/', (req, res) => {
     console.log(req)
-    res.send('Hello World!'); // Send a response to the client using
+    res.json({
+        msg: 'Hello World'
+    }); // Send a response to the client using
+})
+
+server.get('/api/v1/users', (req, res) => {
+    res.status(200).json({
+        msg: 'User list'
+    })
 })
 
 server.listen(5000, ()=> {
