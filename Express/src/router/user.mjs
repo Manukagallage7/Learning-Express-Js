@@ -1,10 +1,11 @@
 import {Router} from "express"
 import {userInfo} from "../data/userinfo.mjs"
+import DB from "../db/db.mjs"
 
 const userRouter = Router()
 
 //Get all users
-userRouter.get('/api/v1/user/allUsers',(req, res)=>{
+userRouter.get('/allUsers',(req, res)=>{
     res.status(200).json({
         msg: 'get all users',
         data: userInfo,
@@ -12,7 +13,7 @@ userRouter.get('/api/v1/user/allUsers',(req, res)=>{
 })
 
 //Get user by ID
-userRouter.get('/api/v1/user/byUserId',(req, res)=>{
+userRouter.get('/byUserId',(req, res)=>{
     const {id} = req.query
     if(!id){
         return res.status(400).json({
@@ -26,6 +27,24 @@ userRouter.get('/api/v1/user/byUserId',(req, res)=>{
         data: user,
     })
 
+})
+
+//create new User
+
+userRouter.post('/create-user', async (req, res)=>{
+
+    const userData = req.body
+    console.log(userData)
+    
+    try {
+        const newUser = await DB.user.create({data: userData})
+        return res.status(201).json({newUser})
+    }catch(error){
+        console.log(error)
+        return res.status(500).json({
+            msg: 'User creation failed',
+        })
+    }
 })
 
 
