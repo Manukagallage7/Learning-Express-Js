@@ -32,6 +32,7 @@ userRouter.get('/byUserId', async (req, res)=>{
             data: null,
         })
     }
+
     try{
         const userData = await DB.user.findUnique({
             where: {Id: Number(id)}
@@ -74,25 +75,25 @@ userRouter.post('/create-user', async (req, res)=>{
 //Update User
 
 userRouter.put('/update-user', async (req, res)=>{
-    const {id} = req.body
+    const id = req.body.id || req.query.id
     if(!id){
         return res.status(400).json({
             msg: 'User ID is required',
             data: null,
         })
     }
+
     try{
         const updatedUser = await DB.user.update({
             where: {Id: Number(id)},
         })
         return res.status(200).json({
             msg: 'User Updated Successfully',
-            data: updatedUser,
+            data: req.body,
         })
-
     }catch(error){
         console.log(error)
-        return res.status(500).js0n({
+        return res.status(500).json({
             msg: 'User Update failed',
             data: null,
         })
@@ -125,14 +126,6 @@ userRouter.delete('/delete-user', async (req, res)=>{
         })
     }
 })
-
-//Login
-
-
-
-//Register
-
-
 
 
 export default userRouter;
