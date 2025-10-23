@@ -86,10 +86,16 @@ userRouter.put('/update-user', async (req, res)=>{
     try{
         const updatedUser = await DB.user.update({
             where: {Id: Number(id)},
+            data: {
+                Name: req.body.Name,
+                Username: req.body.Username,
+                Email: req.body.Email,
+                Password: req.body.Password,
+            }
         })
         return res.status(200).json({
             msg: 'User Updated Successfully',
-            data: req.body,
+            data: updatedUser,
         })
     }catch(error){
         console.log(error)
@@ -103,7 +109,8 @@ userRouter.put('/update-user', async (req, res)=>{
 //Delete User 
 
 userRouter.delete('/delete-user', async (req, res)=>{
-    const {id} = req.body
+    const id = (req.body && req.body.id) || req.query.id
+    
     if(!id){
         return res.status(400).json({
             msg: 'User ID is required',
