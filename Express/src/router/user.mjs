@@ -1,6 +1,8 @@
 import {Router} from "express"
-import {userInfo} from "../data/userinfo.mjs"
 import DB from "../db/db.mjs"
+import { registerValidate, comValidate} from "../utils/validatorMiddleware.mjs"
+import { validationResult, matchedData } from "express-validator"
+import { loginError } from "../utils/error-creator.mjs"
 
 const userRouter = Router()
 
@@ -134,5 +136,84 @@ userRouter.delete('/delete-user', async (req, res)=>{
     }
 })
 
+
+//Register User with validation
+userRouter.post('/register', registerValidate() , async (req, res)=> {
+    const error = validationResult(req)
+    const lerr = loginError(error.array())
+    if(error.array().length){
+        return res.status(400).json({
+            msg: 'error',
+            error: lerr,
+            data: null,
+        })
+    }
+    const data = matchedData(req)
+    console.log(data)
+
+    try{
+        await DB.user.create({data})
+        return res.status(200).json({
+            msg: 'User Created Successfully',
+            data: null,
+        })
+    }catch(error){
+        console.log(error)
+        if(error.code === 'P2002'){
+            return res.status(500).json({
+                msg: 'User already exists',
+                data: null,
+            })
+        }
+        return res.status(500).json({
+            msg: 'Database error occurred',
+            data: null,
+        })
+    }
+})
+
+
+//Login User with validation
+userRouter.post('/login', comValidate('Username', 'Password') , async (req, res)=> {
+    const error = validationResult(req)
+    const lerr = loginError(error.array())
+    if(error.array().length){
+        return res.status(400).json({
+            msg: 'error',
+            error: lerr,
+            data: null,
+        })
+    }
+    const data = matchedData(req)
+    console.log(data)
+
+    try{
+        const user = await DB.user.findUnique({
+            where: {
+                Username: data.Username
+            }
+        })
+        if(user!==null){
+            if(user.Password === data.Password){
+                return res.status(200).json({
+                    msg: 'Login Successful',
+                    error: null,
+                    data: null,
+                })
+            }
+            return res.status(400).json({
+                msg: "error",
+                error: 'password is incorrect',
+                data: null,
+            })
+        }
+    }catch(error){
+        console.log(error)
+        return res.status(500).json({
+            msg: 'Database error occurred',
+            data: null,
+        })
+    }
+})
 
 export default userRouter;
