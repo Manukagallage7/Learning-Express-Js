@@ -17,7 +17,7 @@ model User{
   Id   Int    @id @default(autoincrement())
   Name String
   Username String @unique
-  Email String @unique
+  Email String?
   Password String
   Profile Profile?
   Products Product[]
