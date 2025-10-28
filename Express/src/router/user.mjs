@@ -229,4 +229,5 @@ userRouter.post('/validate', async(req, res)=> {
     res.sendStatus(200)
 })
 
+
 export default userRouter;
