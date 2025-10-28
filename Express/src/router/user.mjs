@@ -195,10 +195,17 @@ userRouter.post('/login', comValidate('Username', 'Password') , async (req, res)
         })
         if(user!==null){
             if(user.Password === data.Password){
+                const payload = {
+                    username:user.Username,
+                }
+                const token = tokenGen(payload)
+                console.log(token);
                 return res.status(200).json({
                     msg: 'Login Successful',
                     error: null,
-                    data: null,
+                    data: {
+                        token: token,
+                    }
                 })
             }
             return res.status(400).json({
@@ -214,6 +221,12 @@ userRouter.post('/login', comValidate('Username', 'Password') , async (req, res)
             data: null,
         })
     }
+})
+
+userRouter.post('/validate', async(req, res)=> {
+    const token = req.body.token
+    console.log(decodeToken(token))
+    res.sendStatus(200)
 })
 
 export default userRouter;
