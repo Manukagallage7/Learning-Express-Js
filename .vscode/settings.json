@@ -3,6 +3,7 @@
         "autoincrement",
         "datainfo",
         "lerr",
+        "mykey",
         "productinfo"
     ]
 }

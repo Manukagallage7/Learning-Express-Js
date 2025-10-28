@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 export const tokenGen = (payload)=> {
-    const token = jwt.sign(payload, JWT_SECRET);
+    const token = jwt.sign(payload, "mykey123",);
     return token;
 };
 
@@ -11,6 +11,11 @@ export const decodeToken = (token)=> {
 };
 
 export const verifyToken = (token)=> {
-    const payload = jwt.verify(token, JWT_SECRET)
-    return payload;
+    try{
+        const payload = jwt.verify(token, "mykey123")
+        return payload;
+    } catch(error){
+        console.log("Invalid Token");
+        return null;
+    }
 }

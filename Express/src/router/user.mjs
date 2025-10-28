@@ -3,6 +3,8 @@ import DB from "../db/db.mjs"
 import { registerValidate, comValidate} from "../utils/validatorMiddleware.mjs"
 import { validationResult, matchedData } from "express-validator"
 import { loginError } from "../utils/error-creator.mjs"
+import { tokenGen} from "../utils/jwt.mjs"
+import { checkAuth } from "../utils/authMiddleware.mjs"
 
 const userRouter = Router()
 
@@ -223,10 +225,12 @@ userRouter.post('/login', comValidate('Username', 'Password') , async (req, res)
     }
 })
 
-userRouter.post('/validate', async(req, res)=> {
-    const token = req.body.token
-    console.log(decodeToken(token))
-    res.sendStatus(200)
+userRouter.post('/validate', checkAuth, (req, res)=>{
+    return res.status(200).json({
+        msg: "Success",
+        error: null,
+        data: "token verified",
+    })
 })
 
 
