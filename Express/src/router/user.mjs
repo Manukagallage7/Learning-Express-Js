@@ -2,7 +2,7 @@ import {Router} from "express"
 import DB from "../db/db.mjs"
 import { registerValidate, comValidate} from "../utils/validatorMiddleware.mjs"
 import { validationResult, matchedData } from "express-validator"
-import { loginError } from "../utils/error-creator.mjs"
+import { resError } from "../utils/error-creator.mjs"
 import { tokenGen} from "../utils/jwt.mjs"
 import { checkAuth } from "../utils/authMiddleware.mjs"
 
@@ -142,7 +142,7 @@ userRouter.delete('/delete-user', async (req, res)=>{
 //Register User with validation
 userRouter.post('/register', registerValidate() , async (req, res)=> {
     const error = validationResult(req)
-    const lerr = loginError(error.array())
+    const lerr = resError(error.array())
     if(error.array().length){
         return res.status(400).json({
             msg: 'error',
@@ -178,7 +178,7 @@ userRouter.post('/register', registerValidate() , async (req, res)=> {
 //Login User with validation
 userRouter.post('/login', comValidate('Username', 'Password') , async (req, res)=> {
     const error = validationResult(req)
-    const lerr = loginError(error.array())
+    const lerr = resError(error.array())
     if(error.array().length){
         return res.status(400).json({
             msg: 'error',
