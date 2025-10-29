@@ -13,6 +13,28 @@ model User {
   Username  String   @unique
   Email     String   @unique
   Password  String
+  profile   Profile?
+  products  product[]
   CreatedAt DateTime @default(now())
   UpdatedAt DateTime @updatedAt
+}
+
+
+model Profile {
+  Id        Int      @id @default(autoincrement())
+  Image     String
+  AccountDetails User @relation(fields: [UserId], references: [Id])
+  UserId    Int      @unique
+  CreatedAt DateTime @default(now())
+  UpdatedAt DateTime @updatedAt
+}
+
+model product {
+  Id          Int      @id @default(autoincrement())
+  Name        String
+  User        User     @relation(fields: [UserId], references: [Id])
+  UserId      Int
+  Price       Float
+  CreatedAt   DateTime @default(now())
+  UpdatedAt   DateTime @updatedAt
 }
