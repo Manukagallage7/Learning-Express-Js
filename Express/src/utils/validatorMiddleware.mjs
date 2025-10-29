@@ -25,3 +25,12 @@ export const comValidate = (...keys)=> {
 
     return loginVa;
 }
+
+export const comQValidate = (...keys)=> {
+    const loginVa = [];
+    keys.forEach((k)=> {
+        loginVa.push(query(k).notEmpty().withMessage(`Please Enter the ${k}`))
+    })
+    return loginVa;
+}
+

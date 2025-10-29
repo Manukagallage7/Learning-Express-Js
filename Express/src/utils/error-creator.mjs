@@ -1,4 +1,4 @@
-export const loginError = (error)=> {
+export const resError = (error)=> {
     const errorMsg = {}
 
     for(const e of error){
