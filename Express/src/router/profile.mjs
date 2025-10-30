@@ -1,7 +1,7 @@
 import {Router} from 'express';
 import DB from '../db/db.mjs';
 import { comQValidate, comValidate } from '../utils/validatorMiddleware.mjs';
-import { validationResult, matchedData  } from 'express-validator';
+import { validationResult, matchedData, param  } from 'express-validator';
 import { resError } from '../utils/error-creator.mjs';
 
 const profileRouter = Router();
@@ -25,6 +25,54 @@ profileRouter.get('/all',  async (req, res)=> {
             msg: "All User Profiles",
             error: null,
             data: allProfiles
+        })
+
+    }catch(error){
+        console.log(error)
+        return res.status(500).json({
+            msg: "error",
+            error: "database error",
+            data: null
+        })
+    }
+})
+
+//get profile by user id
+profileRouter.get('/:id',
+    param('id').notEmpty().isNumeric().withMessage('Enter id as Number'),
+    async (req, res)=> {
+        const error = validationResult(req)
+        const err = resError(error.array())
+
+        if(error.array().length){
+            return res.status(400).json({
+                msg: "error",
+                error: err,
+                data: null,
+            })
+        }
+        const data = matchedData(req)
+        console.log(data)
+
+    try{
+        const Profile = await DB.profile.findUnique({
+            select: {
+                Image: true,
+                AccountDetails: {
+                    select: {
+                        Name: true,
+                        Username: true,
+                    },
+                },
+            },
+            where: {
+                Id: Number(data.id)
+            },
+        })
+        return res.status(200).json({
+            msg: "All User Profiles",
+            error: null,
+            data: Profile
         })
 
     }catch(error){
