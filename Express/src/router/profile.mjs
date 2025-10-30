@@ -8,6 +8,35 @@ const profileRouter = Router();
 
 //get all profiles
 
+profileRouter.get('/all',  async (req, res)=> {
+    try{
+        const allProfiles = await DB.profile.findMany({
+            select: {
+                Image: true,
+                AccountDetails: {
+                    select: {
+                        Name: true,
+                        Username: true,
+                    }
+                }
+            }
+        })
+        return res.status(200).json({
+            msg: "All User Profiles",
+            error: null,
+            data: allProfiles
+        })
+
+    }catch(error){
+        console.log(error)
+        return res.status(500).json({
+            msg: "error",
+            error: "database error",
+            data: null
+        })
+    }
+})
+
 //create new profile
 profileRouter.post('/create', comQValidate('UserId'), comValidate('Image'), async (req, res)=> {
     const error = validationResult(req)
@@ -26,7 +55,7 @@ profileRouter.post('/create', comQValidate('UserId'), comValidate('Image'), asyn
     try{
         const newProfile = await DB.profile.create({
             data: {
-                UserId: data.UserId,
+                UserId: parseInt(data.UserId),
                 Image: data.Image,
             }
         })
