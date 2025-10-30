@@ -122,8 +122,92 @@ profileRouter.post('/create', comQValidate('UserId'), comValidate('Image'), asyn
             data: null
         })
     }
+})
 
-    res.sendStatus(200)
+//update profile
+profileRouter.put('/update', comQValidate('UserId'), comValidate('Image'), async (req, res)=> {
+    const error = validationResult(req)
+    const err = resError(error.array())
+
+    if(error.array().length){
+        return res.status(400).json({
+            msg: "error",
+            error: err,
+            data: null
+        })
+    }
+    const data = matchedData(req)
+    console.log(data)
+
+    try{
+        const updateProfile = await DB.profile.update({
+            data: {
+                Image: data.Image,
+            },
+            where: {
+                UserId: Number(data.UserId),
+            }
+        })
+
+        return res.status(201).json({
+            msg: "Update profile successful",
+            error: null,
+            data: updateProfile
+        })
+
+    }catch(error){
+        console.log(error)
+        return res.status(500).json({
+            msg: "error",
+            error: "database error",
+            data: null
+        })
+    }
+})
+
+//delete profile
+profileRouter.delete('/delete', comQValidate('UserId'), comValidate('Image'), async (req, res)=> {
+    const error = validationResult(req)
+    const err = resError(error.array())
+
+    if(error.array().length){
+        return res.status(400).json({
+            msg: "error",
+            error: err,
+            data: null
+        })
+    }
+    const data = matchedData(req)
+    console.log(data)
+
+    try{
+        const Profile = await DB.profile.delete({
+            where: {
+                UserId: Number(data.UserId),
+            },
+            select: {
+                AccountDetails: {
+                    select: {
+                        Name: true
+                    }
+                }
+            }
+        })
+
+        return res.status(201).json({
+            msg: "Profile deleted successful",
+            error: null,
+            data: `${Profile.AccountDetails.Name}'s profile deleted`
+        })
+
+    }catch(error){
+        console.log(error)
+        return res.status(500).json({
+            msg: "error",
+            error: "database error",
+            data: null
+        })
+    }
 })
 
 export default profileRouter;
