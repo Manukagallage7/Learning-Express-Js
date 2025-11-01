@@ -14,7 +14,7 @@ model User {
   Email     String   @unique
   Password  String
   profile   Profile?
-  products  product[]
+  products  Product[]
   CreatedAt DateTime @default(now())
   UpdatedAt DateTime @updatedAt
 }
@@ -29,12 +29,21 @@ model Profile {
   UpdatedAt DateTime @updatedAt
 }
 
-model product {
+model Product {
   Id          Int      @id @default(autoincrement())
   Name        String
   User        User     @relation(fields: [UserId], references: [Id])
   UserId      Int
   Price       Float
+  Categories  Category[]   @relation("ProductCategories")
   CreatedAt   DateTime @default(now())
   UpdatedAt   DateTime @updatedAt
+}
+
+model Category{
+  Id   Int @id @default(autoincrement())
+  Name String
+  Products Product[] @relation("ProductCategories")
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
 }
