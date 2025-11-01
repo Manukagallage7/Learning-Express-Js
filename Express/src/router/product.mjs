@@ -1,6 +1,6 @@
 import {Router} from 'express';
 import DB from '../db/db.mjs';
-import { comPValidate, comValidate } from '../utils/validatorMiddleware.mjs';
+import { comPValidate, comQValidate, comValidate } from '../utils/validatorMiddleware.mjs';
 import { validationResult, matchedData  } from 'express-validator';
 import { resError } from '../utils/error-creator.mjs';
 
@@ -123,6 +123,57 @@ productRouter.post(
                 error: "Failed to Create product",
                 data:null
             })
+        }
+    }
+)
+
+//Get product by User
+productRouter.get("/all-by-user",
+    comQValidate("UserId"),
+    async (req, res) => {
+        const error = validationResult(req);
+        const err = resError(error.array());
+
+        if(error.array().length) {
+            return res.status(400).json({
+                msg: "error",
+                error: err,
+                data: null,
+            })
+        }
+        const data = matchedData(req);
+        console.log(data)
+        try {
+            const allProduct = await DB.product.findMany({
+                select: {
+                    Name: true,
+                    Price: true,
+                    User: {
+                        select: {
+                            Name: true,
+                            Username: true
+                        }
+                    }
+                },
+                where: {
+                    UserId: Number(data.UserId)
+                }
+            })
+            return res.status(200).json({
+                msg: allProduct.length>0?
+                        `Products for ${allProduct[0]?.User?.Name}`
+                        :"no product for that user",
+                error: null,
+                data: allProduct,
+            })
+
+        }catch(error){
+            console.log(error)
+            return res.status(500).json({
+                msg: 'Failed to update Product',
+                error: err,
+                data: null,
+        })
         }
     }
 )
