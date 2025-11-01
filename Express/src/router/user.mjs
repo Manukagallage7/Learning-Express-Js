@@ -66,7 +66,12 @@ userRouter.get("/product/:UserId",
                         products: {
                             select: {
                                 Name: true,
-                                Price: true
+                                Price: true,
+                                Categories: {
+                                    select: {
+                                        Name: true
+                                    }
+                                }
                             }
                         }
                     },
@@ -89,11 +94,11 @@ userRouter.get("/product/:UserId",
                 })
 
             } catch(error){
-                console.log(err)
+                console.log(error)
                 return res.status(400).json({
                     msg: "error",
                     error: "user data not found",
-                    data: userData,
+                    data: null,
                 })
             }
         }
