@@ -55,6 +55,103 @@ userRouter.get('/byUserId', async (req, res)=>{
 
 })
 
+//Get Product by UserId
+userRouter.get("/product/:UserId",
+    async(req, res) => {
+        const {UserId} = req.params;
+        if(UserId !== undefined && UserId !== "") {
+            try{
+                const userData = await DB.user.findUnique({
+                    select: {
+                        products: {
+                            select: {
+                                Name: true,
+                                Price: true
+                            }
+                        }
+                    },
+                    where: {
+                        Id: Number(UserId)
+                    }
+                })
+                if(userData !== null){
+                    return res.status(200).json({
+                        msg: "error",
+                        error: "Your error msg",
+                        data: userData
+                    })
+                }
+
+                return res.status(404).json({
+                    msg: "error",
+                    error: "user data not found",
+                    data: userData,
+                })
+
+            } catch(error){
+                console.log(err)
+                return res.status(400).json({
+                    msg: "error",
+                    error: "user data not found",
+                    data: userData,
+                })
+            }
+        }
+        return res.status(400).json({
+            msg: "some error",
+            data: null
+        })
+    }
+)
+
+//Get Profile by UserId
+userRouter.get("/profile/:UserId",
+    async(req, res) => {
+        const {UserId} = req.params;
+        if(UserId !== undefined && UserId !== "") {
+            try{
+                const userData = await DB.user.findUnique({
+                    select: {
+                        profile: {
+                            select: {
+                                Image: true,
+                            }
+                        }
+                    },
+                    where: {
+                        Id: Number(UserId)
+                    }
+                })
+                if(userData !== null){
+                    return res.status(200).json({
+                        msg: "error",
+                        error: "Your error msg",
+                        data: userData
+                    })
+                }
+
+                return res.status(404).json({
+                    msg: "error",
+                    error: "user data not found",
+                    data: userData,
+                })
+
+            } catch(error){
+                console.log(error)
+                return res.status(400).json({
+                    msg: "error",
+                    error: "user data not found",
+                    data: userData,
+                })
+            }
+        }
+        return res.status(400).json({
+            msg: "some error",
+            data: null
+        })
+    }
+)
+
 //create new User
 
 userRouter.post('/create-user', async (req, res)=>{
