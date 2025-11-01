@@ -86,7 +86,7 @@ categoryRouter.get('/byProductId/:id',
 //Create new Product
 categoryRouter.post(
     "/create",
-    comValidate("Name"),
+    comValidate("Name","ProductIds"),
     async (req, res) => {
         const error = validationResult(req);
         const err = resError(error.array());
@@ -105,6 +105,13 @@ categoryRouter.post(
             const newCategory = await DB.category.create({
                 data: {
                     Name: data.Name,
+                    Products: {
+                        connect: `${data.ProductIds}`
+                        .split(",")
+                        .map((d)=> ({
+                            Id: Number(d)
+                        }))
+                    }
                 },
             });
 
@@ -180,7 +187,7 @@ categoryRouter.get("/all-by-user",
 categoryRouter.put(
     '/update-category/:id',
     comPValidate('id'),
-    comValidate("Name"),
+    comValidate("Name", "ProductIds"),
     async (req, res)=>{
         const error = validationResult(req);
         const err = resError(error.array());
@@ -205,6 +212,13 @@ categoryRouter.put(
         const updatedCategory = await DB.category.update({
             data: {
                 Name: data.Name,
+                Products: {
+                    connect: `${data.ProductIds}`
+                        .split(",")
+                        .map(d=>({
+                            Id: Number(d)
+                        })),
+                }
             },
             where: {
                 Id: Number(id),
