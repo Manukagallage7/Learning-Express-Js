@@ -1,4 +1,4 @@
-import { body, query } from 'express-validator'
+import { body, query, param } from 'express-validator'
 
 export const validatorMethod = ()=> [
     body("name")
@@ -34,3 +34,10 @@ export const comQValidate = (...keys)=> {
     return loginVa;
 }
 
+export const comPValidate = (...keys) => {
+    const pVa = [];
+    keys.forEach((k) => {
+        pVa.push(param(k).notEmpty().isNumeric().withMessage(`Plz Enter the ${k} as Number `));
+    })
+    return pVa;
+}
