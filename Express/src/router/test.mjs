@@ -17,6 +17,14 @@ testRouter.get('/abc',
     res.sendStatus(200)
 })
 
+testRouter.get('/get-cookie', (req, res)=> {
+    res.cookie('test-cookie', 'test-value',
+        {httpOnly: true, maxAge: 30000})
+        return res.sendStatus(200)
+})
+
+test
+
 export default testRouter
 
 
