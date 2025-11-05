@@ -23,7 +23,13 @@ testRouter.get('/get-cookie', (req, res)=> {
         return res.sendStatus(200)
 })
 
-test
+testRouter.get('/read-cookie', (req, res)=> {
+    console.log(req.cookies)
+    console.log(req.headers.cookie)
+
+    res.sendStatus(200)
+
+})
 
 export default testRouter
 
