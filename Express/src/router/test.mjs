@@ -42,6 +42,27 @@ testRouter.get('/read-cookie', (req, res)=> {
 
 })
 
+testRouter.get('/get-session', (req, res)=> {
+    req.session['Manu-session'] = {
+        name: 'Manuka',
+        age: 22
+    }
+    req.session['Seni-session'] = {
+        name: 'Senitha',
+        age: 21
+    }
+    return  res.sendStatus(200)
+})
+
+testRouter.get('/read-session', (req, res)=> {
+    console.log(req.sessionID)
+
+    console.log(req.session['Manu-session'])
+    console.log(req.session['Seni-session']) 
+
+    res.sendStatus(200)
+})
+
 export default testRouter
 
 

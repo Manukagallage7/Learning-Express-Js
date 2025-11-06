@@ -1,12 +1,15 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import expressSession from 'express-session';
+import DB from './src/db/db.mjs';
 import productRouter from './src/router/product.mjs';
 import userRouter from './src/router/user.mjs';
 import testRouter from './src/router/test.mjs';
 import profileRouter from './src/router/profile.mjs';
 import { checkAuth } from './src/utils/authMiddleware.mjs';
 import categoryRouter from './src/router/category.mjs';
+import { Prisma } from '@prisma/client';
+import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 
 const server = express();
 
@@ -20,7 +23,12 @@ server.use(expressSession({
         maxAge: 60000,
         httpOnly: true,
         signed: true
-    }
+    },
+    store: new PrismaSessionStore(DB, {
+        checkPeriod: 2*60*1000,
+        dbRecordIdIsSessionId: true,
+        dbRecordIdFunction: undefined
+    })
 }));
 server.use('/api/v1/user', userRouter);
 server.use('/api/v1/product', productRouter);

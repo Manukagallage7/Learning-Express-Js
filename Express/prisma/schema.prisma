@@ -44,6 +44,15 @@ model Category{
   Id   Int @id @default(autoincrement())
   Name String
   Products Product[] @relation("ProductCategories")
-  createAt DateTime @default(now())
-  updateAt DateTime @updatedAt
+  CreatedAt   DateTime  @default(now())
+  UpdatedAt   DateTime  @updatedAt
+}
+
+model Session{
+  id String @id @default(uuid())
+  sid String @unique
+  data String
+  expiresAt DateTime
+  CreatedAt DateTime @default(now())
+  UpdatedAt DateTime @updatedAt
 }
