@@ -19,13 +19,24 @@ testRouter.get('/abc',
 
 testRouter.get('/get-cookie', (req, res)=> {
     res.cookie('test-cookie', 'test-value',
-        {httpOnly: true, maxAge: 30000})
+        {
+            httpOnly: true,
+            signed: true,
+            maxAge: 30000
+        })
+    res.cookie('Manuka-cookie', 'Manuka-Gallage',
+        {
+            httpOnly: true,
+            maxAge: 60000
+        }
+    )
         return res.sendStatus(200)
 })
 
+
 testRouter.get('/read-cookie', (req, res)=> {
     console.log(req.cookies)
-    console.log(req.headers.cookie)
+    console.log(req.signedCookies['test-cookie'])
 
     res.sendStatus(200)
 
