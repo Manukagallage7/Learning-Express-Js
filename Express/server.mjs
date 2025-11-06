@@ -1,5 +1,6 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
+import expressSession from 'express-session';
 import productRouter from './src/router/product.mjs';
 import userRouter from './src/router/user.mjs';
 import testRouter from './src/router/test.mjs';
@@ -11,6 +12,16 @@ const server = express();
 
 server.use(express.json());
 server.use(cookieParser('mykey123'));
+server.use(expressSession({
+    secret: 'mykey123',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        maxAge: 60000,
+        httpOnly: true,
+        signed: true
+    }
+}));
 server.use('/api/v1/user', userRouter);
 server.use('/api/v1/product', productRouter);
 server.use('/api/v1/test', testRouter);
