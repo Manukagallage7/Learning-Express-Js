@@ -1,5 +1,6 @@
 import {Router} from "express";
 import User from '../model/userModel.mjs'
+import Profile from '../model/profileModel.mjs'
 
 const userRouter = Router();
 
@@ -45,6 +46,27 @@ userRouter.get('/',async(req,res)=> {
     }
 })
 
+userRouter.get('/profile/:userId', async(req,res)=> {
+    try{
+        const user = await User.findById(req.params.userId).populate('profile').select(["profile","username"])
+        res.status(200).json(
+            {
+                message: "User profile retrieved successfully",
+                status: "Success",
+                data: user
+            }
+        )
+    }
+    catch(err){
+        return res.status(500).json(
+            {
+                message: err.message,
+                status: "Failed"
+            }
+        )
+    }
+})
+
 userRouter.get('/:id', async(req,res)=> {
     try{
         const user = await User.findById(req.params.id)
@@ -56,6 +78,37 @@ userRouter.get('/:id', async(req,res)=> {
             }
         )
     }catch(err){
+        return res.status(500).json(
+            {
+                message: err.message,
+                status: "Failed"
+            }
+        )
+    }
+})
+
+userRouter.put('/profile/:userId', async(req,res)=> {
+    const { image } = req.body;
+
+    try{
+        const profile = await Profile.create({ user: req.params.userId, image: image });
+        const user = await User.findByIdAndUpdate(
+            req.params.userId,
+            { profile: profile._id },
+            { new: true }
+        );
+        console.log(profile)
+        console.log(user)
+
+        return res.status(200).json(
+            {
+                message: "User profile updated successfully",
+                status: "Success",
+                data: user
+            }
+        )
+    }
+    catch(err){
         return res.status(500).json(
             {
                 message: err.message,
