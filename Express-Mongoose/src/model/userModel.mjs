@@ -29,8 +29,17 @@ const UserSchema = new Schema({
     createdAt: {
         type: Date,
         default: Date.now
+    },
+    profile: {
+        type: Schema.Types.ObjectId,
+        ref: "Profile",
+        unique: true
     }
+},{
+    timestamps: true
 })
+
+
 
 const User = model("User", UserSchema)
 
