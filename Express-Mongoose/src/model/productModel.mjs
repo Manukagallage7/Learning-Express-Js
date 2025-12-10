@@ -7,7 +7,13 @@ const productSchema = new Schema({
         type: Types.ObjectId,
         ref: 'User',
         required: true
-    }
+    },
+    category: [
+        {
+            type: Types.ObjectId,
+            ref: 'Category'
+        }
+    ]
 }, {
     timestamps: true
 });
