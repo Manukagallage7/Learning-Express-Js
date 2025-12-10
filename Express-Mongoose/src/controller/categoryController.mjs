@@ -113,8 +113,8 @@ categoryRouter.put('/update/:id', async (req, res) => {
 
 //Delete Category(For Category to product relation delete only)
 
-categoryRouter.delete('product-delete/:id', async (req, res) => {
-    const productId = req.query.product;
+categoryRouter.delete('/product-delete/:id', async (req, res) => {
+    const productId = req.params.id;
 
     try {
         if (!productId ) {
@@ -126,16 +126,16 @@ categoryRouter.delete('product-delete/:id', async (req, res) => {
 
         await Category.updateMany(
             {products: productId},
-            {$pull: {productId}}
+            {$pull: {products: productId}}
         )
 
         await Product.updateOne(
             {_id: productId},
-            {$pull: {products: []}}
+            {$set: {category: null}}
         )
 
         return res.status(200).json({
-            message: "Category deleted successfully",
+            message: "Category of products deleted successfully",
             status: "Success"
         });
     } catch (err) {
