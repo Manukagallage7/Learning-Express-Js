@@ -142,7 +142,7 @@ userRouter.delete('/profile/:profileId', async(req,res)=> {
 
     const { profileId } = req.params;
     try{
-        await User.updateOne({ profile: profileId }, { profile: null });
+        //await User.updateOne({ profile: profileId }, { profile: null });
         await Profile.deleteOne({_id: profileId });
         return res.status(200).json(
             {
