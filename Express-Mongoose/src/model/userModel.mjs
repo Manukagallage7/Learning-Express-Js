@@ -32,8 +32,7 @@ const UserSchema = new Schema({
     },
     profile: {
         type: Schema.Types.ObjectId,
-        ref: "Profile",
-        unique: true
+        ref: "Profile"
     },
     products:[
         {
