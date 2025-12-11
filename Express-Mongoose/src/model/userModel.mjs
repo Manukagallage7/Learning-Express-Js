@@ -1,4 +1,6 @@
 import {Schema, model, Types} from "mongoose"
+import Category from "./categoryModel.mjs";
+import Product from "./productModel.mjs";
 
 const UserSchema = new Schema({
     name: {
@@ -42,6 +44,26 @@ const UserSchema = new Schema({
     ]
 },{
     timestamps: true
+})
+
+UserSchema.pre("deleteOne", async function(next){
+    const user = await this.model.findOne(this.getQuery())
+    if(user){
+        const products = user.products
+        if(products.length > 0){
+            for(const product of products){
+                await Category.updateMany(
+                    {products: product},
+                    {$pull: {products: product}}
+                )
+                await Product.deleteOne(
+                    {_id: product}
+                )
+            }
+        }
+        await Profile.deleteOne({user: user._id})
+    }
+    next()
 })
 
 
