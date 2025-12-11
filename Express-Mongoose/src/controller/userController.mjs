@@ -118,4 +118,46 @@ userRouter.put('/profile/:userId', async(req,res)=> {
     }
 })
 
+userRouter.delete('/:id', async (req, res)=> {
+    const { id } = req.params;
+    try{
+        await User.deleteOne({_id: id });
+        return res.status(200).json(
+            {
+                message: "User deleted successfully",
+                status: "Success"
+            }
+        )
+    }catch(err){
+        return res.status(500).json(
+            {
+                message: err.message,
+                status: "Failed"
+            }
+        )
+    }
+})
+
+userRouter.delete('/profile/:profileId', async(req,res)=> {
+
+    const { profileId } = req.params;
+    try{
+        await User.updateOne({ profile: profileId }, { profile: null });
+        await Profile.deleteOne({_id: profileId });
+        return res.status(200).json(
+            {
+                message: "User deleted successfully",
+                status: "Success"
+            }
+        )
+    }catch(err){
+        return res.status(500).json(
+            {
+                message: err.message,
+                status: "Failed"
+            }
+        )
+    }
+})
+
 export default userRouter;
